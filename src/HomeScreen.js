@@ -1,3 +1,4 @@
+import { render } from "@testing-library/react";
 import { useState } from "react/cjs/react.development";
 import {utils} from "web3"
 
@@ -43,6 +44,23 @@ export function HomeScreen(props) {
             })
     }
 
+    function renderForm() {
+        return <div style={{display: "flex", flexDirection: "column", width: "30vw"}}>
+            <div class="field">
+                <label class="label">Token Name</label>
+                <div class="control">
+                    <input class="input" type="text" value={tokenName}/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Total Supply</label>
+                <div class="control">
+                    <input class="input" type="text" value={totalSupply} />
+                </div>
+            </div>
+      </div>
+    }
+
     return <div>
         <p>
             Using metamask, we can query the blockchain direcly by
@@ -52,11 +70,7 @@ export function HomeScreen(props) {
         <input onChange={(e) => setContractAddress(e.target.value)} className="input" type="text" placeholder="Token Address"></input>
         <button className="button is-primary" onClick={getTokenInfo}>Get Token Info</button>
         {
-            tokenName == "" ? null : 
-            <div style={{display: "flex", flexDirection: "column"}}>
-                <p>{tokenName}</p>
-                <p>{totalSupply}</p>
-            </div>
+            tokenName == "" ? null : renderForm()
         }
     </div>
 }
