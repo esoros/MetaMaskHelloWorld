@@ -1,6 +1,5 @@
-import { render } from "@testing-library/react";
 import { useState } from "react/cjs/react.development";
-import {utils} from "web3"
+import { hex2a, sha3 } from "./Utils"
 
 export function HomeScreen(props) {
     let eth = props.eth
@@ -12,16 +11,9 @@ export function HomeScreen(props) {
     let [tokenName, setTokenName] = useState("")
     let [totalSupply, setTotalSupply] = useState("")
 
-    function hex2a(str) {
-        var hex = str.toString()
-        var res = ''
-        for (var i = 0; i < hex.length; i += 2)
-            res += String.fromCharCode(parseInt(hex.substr(i, 2), 16))
-        return res
-    }
 
-    let getTokenInfo = () => {
-        let data = utils.sha3('name()')?.slice(0,10)       
+    function getTokenInfo() {
+        let data = sha3('name()')?.slice(0,10)       
         eth.request({method: "eth_call", params: [{to: contractAddress, data: data}, "latest"]})
             .then((resp) => {
                 let name = hex2a(resp.substring(2))
@@ -33,7 +25,7 @@ export function HomeScreen(props) {
                 throw 'eth_call failed' 
             })
     
-        data = utils.sha3('totalSupply()')?.slice(0,10) 
+        data = sha3('totalSupply()')?.slice(0,10) 
         eth.request({method: "eth_call", params: [{to: contractAddress, data: data}, "latest"]})
             .then(resp => {
                 console.log("total supply", resp, parseInt(resp))
@@ -49,13 +41,13 @@ export function HomeScreen(props) {
             <div class="field">
                 <label class="label">Token Name</label>
                 <div class="control">
-                    <input class="input" type="text" value={tokenName}/>
+                    <input class="input is-success" type="text" value={tokenName}/>
                 </div>
             </div>
             <div class="field">
                 <label class="label">Total Supply</label>
                 <div class="control">
-                    <input class="input" type="text" value={totalSupply} />
+                    <input class="input is-success" type="text" value={totalSupply} />
                 </div>
             </div>
       </div>
