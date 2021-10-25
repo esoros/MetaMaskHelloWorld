@@ -1,25 +1,35 @@
 import logo from './logo.svg';
 import './App.css';
+import "./bulma.min.css"
+import { useState } from 'react';
+import { HomeScreen } from './HomeScreen';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+function App() {  
+  let [eth, setEth] = useState()
+  
+  let connectMetamask = () => {
+    let eth = window.ethereum    
+    if (typeof eth !== 'undefined') {
+        eth.request({method: "eth_requestAccounts"})
+            .then((accounts) => {
+                eth.accounts = accounts
+                setEth(eth)
+            })
+            .catch(() => { throw 'unable to create eth provider' })
+    }
+    else
+    {
+        throw 'metamask not installed!'
+    }   
+  }
+
+  if(eth == undefined) {
+    return <div>
+      <button onClick={connectMetamask} className="button is-info">Connect Metamask</button>
     </div>
-  );
+  }
+
+  return <HomeScreen eth={eth} />
 }
 
 export default App;
